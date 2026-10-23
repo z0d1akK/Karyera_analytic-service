@@ -1,0 +1,83 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 003-create-assessment-skill-gaps
+      author: zodiakk
+
+      changes:
+        - createTable:
+            tableName: assessment_skill_gaps
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: assessment_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: skill_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: actual_level
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: required_level
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: weight
+                  type: NUMERIC(8,5)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: absolute_gap
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: normalized_gap
+                  type: NUMERIC(8,6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: priority_score
+                  type: NUMERIC(12,6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mandatory
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: requirement_met
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: assessment_skill_gaps
+            baseColumnNames: assessment_id
+            referencedTableName: career_assessments
+            referencedColumnNames: id
+            constraintName: fk_skill_gap_assessment
+
+        - addUniqueConstraint:
+            tableName: assessment_skill_gaps
+            columnNames: assessment_id, skill_id
+            constraintName: uq_assessment_skill
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE assessment_skill_gaps ADD CONSTRAINT chk_skill_gap_levels CHECK (actual_level >= 0 AND required_level > 0 AND absolute_gap >= 0 AND normalized_gap BETWEEN 0 AND 1 AND weight > 0);

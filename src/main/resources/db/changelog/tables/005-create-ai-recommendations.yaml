@@ -1,0 +1,53 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 005-create-ai-recommendations
+      author: zodiakk
+
+      changes:
+        - createTable:
+            tableName: ai_recommendations
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: assessment_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: model_identifier
+                  type: VARCHAR(100)
+              - column:
+                  name: prompt_version
+                  type: VARCHAR(30)
+              - column:
+                  name: content
+                  type: JSONB
+              - column:
+                  name: error_code
+                  type: VARCHAR(100)
+              - column:
+                  name: generated_at
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: ai_recommendations
+            baseColumnNames: assessment_id
+            referencedTableName: career_assessments
+            referencedColumnNames: id
+            constraintName: fk_ai_recommendation_assessment

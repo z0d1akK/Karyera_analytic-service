@@ -1,0 +1,93 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 006-create-talent-screenings
+      author: zodiakk
+
+      changes:
+        - createTable:
+            tableName: talent_screenings
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: job_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: reserve_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_position_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: target_grade_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: requirement_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: requirement_revision
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: methodology_version
+                  type: VARCHAR(30)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: VARCHAR(25)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: candidate_count
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: evaluated_count
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: failed_count
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: completed_at
+                  type: TIMESTAMP WITH TIME ZONE
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: talent_screenings
+            baseColumnNames: job_id
+            referencedTableName: analytics_jobs
+            referencedColumnNames: id
+            constraintName: fk_talent_screening_job
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE talent_screenings ADD CONSTRAINT chk_talent_screening_counts CHECK (candidate_count >= 0 AND evaluated_count >= 0 AND failed_count >= 0 AND evaluated_count + failed_count <= candidate_count);
+              ALTER TABLE talent_screenings ADD CONSTRAINT chk_talent_screening_revision CHECK (requirement_revision > 0);

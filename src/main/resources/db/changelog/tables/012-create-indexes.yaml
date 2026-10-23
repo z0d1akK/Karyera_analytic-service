@@ -1,0 +1,20 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 012-create-indexes
+      author: zodiakk
+
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE INDEX idx_assessment_employee_date ON career_assessments (employee_id, calculated_at DESC);
+              CREATE INDEX idx_assessment_target ON career_assessments (target_position_id, target_grade_id, calculated_at DESC);
+              CREATE INDEX idx_assessment_requirement ON career_assessments (requirement_id);
+              CREATE INDEX idx_assessment_stale ON career_assessments (employee_id) WHERE is_stale = TRUE;
+              CREATE INDEX idx_screening_ranking ON screening_results (screening_id, score DESC);
+              CREATE INDEX idx_analytics_jobs_pending ON analytics_jobs (status, next_attempt_at, created_at) WHERE status IN ('PENDING', 'RETRY_WAIT');
+              CREATE INDEX idx_activity_employee_period ON employee_activity_aggregates (employee_id, period_start);
+              CREATE UNIQUE INDEX uq_analytics_job_idempotency ON analytics_jobs (idempotency_key) WHERE idempotency_key IS NOT NULL;
+              CREATE INDEX idx_ai_recommendation_assessment ON ai_recommendations (assessment_id, created_at DESC);
+              CREATE INDEX idx_talent_screening_reserve ON talent_screenings (reserve_id, created_at DESC);

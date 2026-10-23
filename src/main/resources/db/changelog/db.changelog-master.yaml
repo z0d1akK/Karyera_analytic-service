@@ -1,0 +1,37 @@
+databaseChangeLog:
+
+  - include:
+      file: db/changelog/tables/001-create-analytics-jobs.yaml
+
+  - include:
+      file: db/changelog/tables/002-create-career-assessments.yaml
+
+  - include:
+      file: db/changelog/tables/003-create-assessment-skill-gaps.yaml
+
+  - include:
+      file: db/changelog/tables/004-create-assessment-components.yaml
+
+  - include:
+      file: db/changelog/tables/005-create-ai-recommendations.yaml
+
+  - include:
+      file: db/changelog/tables/006-create-talent-screenings.yaml
+
+  - include:
+      file: db/changelog/tables/007-create-screening-results.yaml
+
+  - include:
+      file: db/changelog/tables/008-create-employee-analytics-profiles.yaml
+
+  - include:
+      file: db/changelog/tables/009-create-employee-activity-aggregates.yaml
+
+  - include:
+      file: db/changelog/tables/010-create-outbox-events.yaml
+
+  - include:
+      file: db/changelog/tables/011-create-processed-events.yaml
+
+  - include:
+      file: db/changelog/tables/012-create-indexes.yaml

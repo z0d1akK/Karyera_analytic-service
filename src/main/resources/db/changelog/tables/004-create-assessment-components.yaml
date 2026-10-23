@@ -1,0 +1,61 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 004-create-assessment-components
+      author: zodiakk
+
+      changes:
+        - createTable:
+            tableName: assessment_components
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: assessment_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: component_code
+                  type: VARCHAR(40)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: raw_score
+                  type: NUMERIC(8,6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: coefficient
+                  type: NUMERIC(8,6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: weighted_score
+                  type: NUMERIC(8,6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: details
+                  type: JSONB
+
+        - addForeignKeyConstraint:
+            baseTableName: assessment_components
+            baseColumnNames: assessment_id
+            referencedTableName: career_assessments
+            referencedColumnNames: id
+            constraintName: fk_assessment_component_assessment
+
+        - addUniqueConstraint:
+            tableName: assessment_components
+            columnNames: assessment_id, component_code
+            constraintName: uq_assessment_component
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE assessment_components ADD CONSTRAINT chk_assessment_component_scores CHECK (raw_score BETWEEN 0 AND 1 AND coefficient BETWEEN 0 AND 1 AND weighted_score BETWEEN 0 AND 1);
