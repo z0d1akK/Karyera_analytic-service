@@ -2,19 +2,21 @@ package com.zodiakk.analyticservice.assessment.entity;
 
 import com.zodiakk.analyticservice.common.entity.CreatedEntity;
 import com.zodiakk.analyticservice.common.enums.DataQualityStatus;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.UUID;
-import org.hibernate.annotations.ColumnTransformer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnTransformer;
+
+import java.math.BigDecimal;
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter

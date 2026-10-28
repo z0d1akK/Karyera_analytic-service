@@ -3,18 +3,20 @@ package com.zodiakk.analyticservice.job.entity;
 import com.zodiakk.analyticservice.common.entity.VersionedCreatedEntity;
 import com.zodiakk.analyticservice.common.enums.AnalyticsJobStatus;
 import com.zodiakk.analyticservice.common.enums.AnalyticsJobType;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import java.time.OffsetDateTime;
-import java.util.UUID;
-import org.hibernate.annotations.ColumnTransformer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnTransformer;
+
+import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Getter
 @Setter
