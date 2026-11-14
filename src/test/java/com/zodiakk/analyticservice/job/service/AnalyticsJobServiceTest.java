@@ -2,6 +2,7 @@ package com.zodiakk.analyticservice.job.service;
 
 import com.zodiakk.analyticservice.common.enums.AnalyticsJobStatus;
 import com.zodiakk.analyticservice.common.enums.AnalyticsJobType;
+import com.zodiakk.analyticservice.common.exception.JobNotFoundException;
 import com.zodiakk.analyticservice.config.JobProperties;
 import com.zodiakk.analyticservice.job.entity.AnalyticsJob;
 import com.zodiakk.analyticservice.job.repository.AnalyticsJobRepository;
@@ -23,6 +24,8 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -90,6 +93,48 @@ class AnalyticsJobServiceTest {
         assertEquals(0, service.progress(job, 0, 1));
         job.setStatus(AnalyticsJobStatus.FAILED);
         assertEquals(100, service.progress(job, 0, 1));
+        job.setStatus(AnalyticsJobStatus.RETRY_WAIT);
+        assertEquals(10, service.progress(job, 0, 1));
+        job.setStatus(AnalyticsJobStatus.COMPLETED);
+        assertEquals(100, service.progress(job, 0, 1));
+    }
+
+    @Test
+    void claimsCreatesAndShowsJobsByRequester() {
+        when(jobRepository.lockAvailable(any(), anyInt())).thenReturn(List.of(job(AnalyticsJobStatus.PENDING, 0)));
+        assertEquals(AnalyticsJobStatus.RUNNING, service.claim().getFirst().getStatus());
+
+        when(jobRepository.save(any())).thenAnswer(invocation -> invocation.getArgument(0));
+        AnalyticsJob created = service.create(AnalyticsJobType.CAREER_ASSESSMENT, UUID.randomUUID(), "  ", java.util.Map.of("employeeId", UUID.randomUUID()));
+        assertEquals(AnalyticsJobStatus.PENDING, created.getStatus());
+
+        AnalyticsJob visible = job(AnalyticsJobStatus.PENDING, 0);
+        UUID requester = UUID.randomUUID();
+        visible.setRequestedBy(requester);
+        visible.setParameters("{\"employeeId\":\"" + UUID.randomUUID() + "\"}");
+        when(jobRepository.findById(visible.getId())).thenReturn(Optional.of(visible));
+        when(accessService.isHr()).thenReturn(true);
+        assertEquals(visible, service.getVisible(visible.getId()));
+
+        when(accessService.isHr()).thenReturn(false);
+        when(accessService.isAdmin()).thenReturn(false);
+        SecurityContextHolder.getContext().setAuthentication(new org.springframework.security.authentication.UsernamePasswordAuthenticationToken(
+                com.zodiakk.analyticservice.security.principal.CurrentUser.builder()
+                        .userId(requester).role("ROLE_EMPLOYEE").email("a@b.c").build(),
+                null
+        ));
+        assertEquals(visible, service.getVisible(visible.getId()));
+        assertThrows(IllegalStateException.class, () -> service.read("{", Object.class));
+    }
+
+    @Test
+    void throwsWhenJobIsMissing() {
+        UUID id = UUID.randomUUID();
+        when(jobRepository.findByIdForUpdate(id)).thenReturn(Optional.empty());
+        when(jobRepository.findById(id)).thenReturn(Optional.empty());
+        assertThrows(JobNotFoundException.class, () -> service.complete(id, UUID.randomUUID(), null));
+        assertThrows(JobNotFoundException.class, () -> service.fail(id, "X", "nope"));
+        assertThrows(JobNotFoundException.class, () -> service.getVisible(id));
     }
 
     private AnalyticsJob job(AnalyticsJobStatus status, int attempts) {

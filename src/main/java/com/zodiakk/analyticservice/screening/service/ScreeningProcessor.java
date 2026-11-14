@@ -1,6 +1,5 @@
 package com.zodiakk.analyticservice.screening.service;
 
-import com.zodiakk.analyticservice.assessment.entity.CareerAssessment;
 import com.zodiakk.analyticservice.assessment.service.AssessmentEngine;
 import com.zodiakk.analyticservice.common.constants.KafkaEventConstants;
 import com.zodiakk.analyticservice.common.enums.ScreeningEligibilityStatus;

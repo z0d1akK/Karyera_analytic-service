@@ -19,6 +19,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import java.util.List;
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -66,6 +67,26 @@ class AnalyticsAccessServiceTest {
         service.requireSelfOrManager(employeeId);
         assertThrows(org.springframework.security.access.AccessDeniedException.class,
                 () -> service.requireSelfOrManager(UUID.randomUUID()));
+    }
+
+    @Test
+    void dashboardAndEmployeeAccessDependOnRole() {
+        authenticate(SecurityConstants.ADMIN_AUTHORITY);
+        service.requireDashboardAccess();
+        assertTrue(service.isAdmin());
+
+        authenticate(SecurityConstants.HR_AUTHORITY);
+        service.requireSelfOrManager(UUID.randomUUID());
+        assertTrue(service.isHrOrAdmin());
+        assertTrue(service.canAccessEmployee(UUID.randomUUID()));
+
+        UUID userId = UUID.randomUUID();
+        UUID self = UUID.randomUUID();
+        authenticate(SecurityConstants.EMPLOYEE_AUTHORITY, userId);
+        when(employeeClient.employeeByUser(userId)).thenReturn(new EmployeeLookupItemDto(self, "E", true, null, null, null));
+        assertThrows(AccessDeniedException.class, service::requireDashboardAccess);
+        assertTrue(service.canAccessEmployee(self));
+        assertFalse(service.canAccessEmployee(UUID.randomUUID()));
     }
 
     private void authenticate(String role) {
