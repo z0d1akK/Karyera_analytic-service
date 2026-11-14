@@ -1,0 +1,12 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 013-add-screening-explanation
+      author: zodiakk
+      changes:
+        - addColumn:
+            tableName: talent_screenings
+            columns:
+              - column:
+                  name: explanation_text
+                  type: TEXT

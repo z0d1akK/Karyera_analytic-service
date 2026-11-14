@@ -61,4 +61,7 @@ public class TalentScreening extends CreatedEntity {
     @Column(name = "completed_at")
     private OffsetDateTime completedAt;
 
+    @Column(name = "explanation_text", columnDefinition = "text")
+    private String explanationText;
+
 }

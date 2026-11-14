@@ -5,5 +5,6 @@ public enum RecommendationStatus {
     PENDING,
     RUNNING,
     COMPLETED,
+    FALLBACK,
     FAILED
 }
