@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public interface AiRecommendationRepository extends JpaRepository<AiRecommendation, UUID>, JpaSpecificationExecutor<AiRecommendation> {
+public interface AiRecommendationRepository extends JpaRepository<AiRecommendation, UUID> {
 
     List<AiRecommendation> findAllByAssessmentIdOrderByCreatedAtDesc(UUID assessmentId);
 

@@ -12,7 +12,7 @@ import java.time.*;
 import java.util.*;
 
 @Repository
-public interface AnalyticsJobRepository extends JpaRepository<AnalyticsJob, UUID>, JpaSpecificationExecutor<AnalyticsJob> {
+public interface AnalyticsJobRepository extends JpaRepository<AnalyticsJob, UUID> {
 
     List<AnalyticsJob> findAllByStatus(AnalyticsJobStatus status);
 

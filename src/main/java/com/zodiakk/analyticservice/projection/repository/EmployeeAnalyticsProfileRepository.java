@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public interface EmployeeAnalyticsProfileRepository extends JpaRepository<EmployeeAnalyticsProfile, UUID>, JpaSpecificationExecutor<EmployeeAnalyticsProfile> {
+public interface EmployeeAnalyticsProfileRepository extends JpaRepository<EmployeeAnalyticsProfile, UUID> {
 
     List<EmployeeAnalyticsProfile> findAllByActiveTrue();
 

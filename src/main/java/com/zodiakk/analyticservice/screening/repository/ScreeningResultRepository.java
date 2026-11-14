@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public interface ScreeningResultRepository extends JpaRepository<ScreeningResult, UUID>, JpaSpecificationExecutor<ScreeningResult> {
+public interface ScreeningResultRepository extends JpaRepository<ScreeningResult, UUID> {
 
     List<ScreeningResult> findAllByScreeningIdOrderByRankAsc(UUID screeningId);
 

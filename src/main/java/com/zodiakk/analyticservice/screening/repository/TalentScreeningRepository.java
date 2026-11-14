@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public interface TalentScreeningRepository extends JpaRepository<TalentScreening, UUID>, JpaSpecificationExecutor<TalentScreening> {
+public interface TalentScreeningRepository extends JpaRepository<TalentScreening, UUID> {
 
     List<TalentScreening> findAllByReserveIdOrderByCreatedAtDesc(UUID reserveId);
 

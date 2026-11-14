@@ -11,7 +11,7 @@ import java.time.OffsetDateTime;
 import java.util.*;
 
 @Repository
-public interface CareerAssessmentRepository extends JpaRepository<CareerAssessment, UUID>, JpaSpecificationExecutor<CareerAssessment> {
+public interface CareerAssessmentRepository extends JpaRepository<CareerAssessment, UUID> {
 
     List<CareerAssessment> findAllByEmployeeIdOrderByCalculatedAtDesc(UUID employeeId);
 

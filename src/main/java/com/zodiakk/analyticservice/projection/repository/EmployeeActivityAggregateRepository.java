@@ -9,7 +9,7 @@ import java.time.*;
 import java.util.*;
 
 @Repository
-public interface EmployeeActivityAggregateRepository extends JpaRepository<EmployeeActivityAggregate, UUID>, JpaSpecificationExecutor<EmployeeActivityAggregate> {
+public interface EmployeeActivityAggregateRepository extends JpaRepository<EmployeeActivityAggregate, UUID> {
 
     List<EmployeeActivityAggregate> findAllByEmployeeIdAndPeriodStartBetween(
             UUID employeeId,

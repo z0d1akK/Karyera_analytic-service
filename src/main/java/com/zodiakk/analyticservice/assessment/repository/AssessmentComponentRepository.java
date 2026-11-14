@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import java.util.*;
 
 @Repository
-public interface AssessmentComponentRepository extends JpaRepository<AssessmentComponent, UUID>, JpaSpecificationExecutor<AssessmentComponent> {
+public interface AssessmentComponentRepository extends JpaRepository<AssessmentComponent, UUID> {
 
     List<AssessmentComponent> findAllByAssessmentId(UUID assessmentId);
 
